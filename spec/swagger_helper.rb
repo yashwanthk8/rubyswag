@@ -14,7 +14,7 @@ RSpec.configure do |config|
 
       servers: [
         {
-          url: "http://localhost:3000",
+          url: "https://rubyswag.onrender.com",
           description: "Development server"
         }
       ],
