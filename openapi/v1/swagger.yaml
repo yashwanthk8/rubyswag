@@ -1,0 +1,198 @@
+---
+openapi: 3.0.1
+info:
+  title: Product API
+  version: v1
+  description: A simple REST API for managing products
+servers:
+- url: http://localhost:3000
+  description: Development server
+paths:
+  /api/v1/products:
+    get:
+      tags:
+      - Products
+      summary: List all products
+      description: Returns a list of all products
+      operationId: listProducts
+      responses:
+        '200':
+          description: Success - returns list of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Product"
+    post:
+      tags:
+      - Products
+      summary: Create a product
+      description: Creates a new product
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    price:
+                      type: number
+      responses:
+        '201':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Product"
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/api/v1/products/{id}":
+    get:
+      tags:
+      - Products
+      summary: Get a product
+      description: Returns a single product by ID
+      operationId: getProduct
+      parameters:
+      - name: id
+        in: path
+        description: Product ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Product found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Product"
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    patch:
+      tags:
+      - Products
+      summary: Update a product
+      description: Updates a product
+      operationId: updateProduct
+      parameters:
+      - name: id
+        in: path
+        description: Product ID
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    price:
+                      type: number
+      responses:
+        '200':
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Product"
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    delete:
+      tags:
+      - Products
+      summary: Delete a product
+      description: Deletes a product
+      operationId: deleteProduct
+      parameters:
+      - name: id
+        in: path
+        description: Product ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Product deleted
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The product ID
+        name:
+          type: string
+          description: The product name
+        description:
+          type: string
+          nullable: true
+          description: The product description
+        price:
+          type: string
+          format: decimal
+          description: The product price (must be greater than 0)
+        created_at:
+          type: string
+          format: date-time
+          description: When the product was created
+        updated_at:
+          type: string
+          format: date-time
+          description: When the product was last updated
+      required:
+      - id
+      - name
+      - price
+      - created_at
+      - updated_at
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
